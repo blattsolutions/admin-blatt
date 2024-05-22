@@ -307,7 +307,7 @@ const NAV_ITEMS = [
   },
   {
     title: 'Item 4',
-    path: 'https://www.google.com/',
+    path: '',
     icon: <Iconify icon="carbon:basketball" sx={{ width: 1, height: 1 }} />,
   },
 ];
