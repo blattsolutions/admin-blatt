@@ -3,25 +3,25 @@ import isEqual from 'lodash/isEqual';
 import { useState, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+// import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+// import { useBoolean } from 'src/hooks/use-boolean';
 
-import { countries } from 'src/assets/data';
+// import { countries } from 'src/assets/data';
 import {
   _jobs,
-  _roles,
+  // _roles,
   JOB_SORT_OPTIONS,
-  JOB_BENEFIT_OPTIONS,
-  JOB_EXPERIENCE_OPTIONS,
-  JOB_EMPLOYMENT_TYPE_OPTIONS,
+  // JOB_BENEFIT_OPTIONS,
+  // JOB_EXPERIENCE_OPTIONS,
+  // JOB_EMPLOYMENT_TYPE_OPTIONS,
 } from 'src/_mock';
 
-import Iconify from 'src/components/iconify';
+// import Iconify from 'src/components/iconify';
 import EmptyContent from 'src/components/empty-content';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
@@ -29,7 +29,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import JobList from '../job-list';
 import JobSort from '../job-sort';
 import JobSearch from '../job-search';
-import JobFilters from '../job-filters';
+// import JobFilters from '../job-filters';
 import JobFiltersResult from '../job-filters-result';
 
 // ----------------------------------------------------------------------
@@ -47,7 +47,7 @@ const defaultFilters = {
 export default function JobListView() {
   const settings = useSettingsContext();
 
-  const openFilters = useBoolean();
+  // const openFilters = useBoolean();
 
   const [sortBy, setSortBy] = useState('latest');
 
@@ -115,11 +115,11 @@ export default function JobListView() {
         query={search.query}
         results={search.results}
         onSearch={handleSearch}
-        hrefItem={(id) => paths.dashboard.job.details(id)}
+        hrefItem={(id) => paths.dashboard.form.details(id)}
       />
 
       <Stack direction="row" spacing={1} flexShrink={0}>
-        <JobFilters
+        {/* <JobFilters
           open={openFilters.value}
           onOpen={openFilters.onTrue}
           onClose={openFilters.onFalse}
@@ -135,7 +135,7 @@ export default function JobListView() {
           benefitOptions={JOB_BENEFIT_OPTIONS.map((option) => option.label)}
           experienceOptions={['all', ...JOB_EXPERIENCE_OPTIONS.map((option) => option.label)]}
           employmentTypeOptions={JOB_EMPLOYMENT_TYPE_OPTIONS.map((option) => option.label)}
-        />
+        /> */}
 
         <JobSort sort={sortBy} onSort={handleSortBy} sortOptions={JOB_SORT_OPTIONS} />
       </Stack>
@@ -161,21 +161,21 @@ export default function JobListView() {
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           {
-            name: 'Job',
-            href: paths.dashboard.job.root,
+            name: 'Form Customer',
+            href: paths.dashboard.form.root,
           },
           { name: 'List' },
         ]}
-        action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.job.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            New Job
-          </Button>
-        }
+        // action={
+        //   <Button
+        //     component={RouterLink}
+        //     href={paths.dashboard.form.new}
+        //     variant="contained"
+        //     startIcon={<Iconify icon="mingcute:add-line" />}
+        //   >
+        //     New Job
+        //   </Button>
+        // }
         sx={{
           mb: { xs: 3, md: 5 },
         }}

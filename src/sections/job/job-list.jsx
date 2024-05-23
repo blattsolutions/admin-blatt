@@ -16,14 +16,14 @@ export default function JobList({ jobs }) {
 
   const handleView = useCallback(
     (id) => {
-      router.push(paths.dashboard.job.details(id));
+      router.push(paths.dashboard.form.details(id));
     },
     [router]
   );
 
   const handleEdit = useCallback(
     (id) => {
-      router.push(paths.dashboard.job.edit(id));
+      router.push(paths.dashboard.form.edit(id));
     },
     [router]
   );

@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
+// import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
@@ -15,7 +15,7 @@ import { RouterLink } from 'src/routes/components';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { fDate } from 'src/utils/format-time';
-import { fShortenNumber } from 'src/utils/format-number';
+// import { fShortenNumber } from 'src/utils/format-number';
 
 import Label from 'src/components/label';
 import Image from 'src/components/image';
@@ -34,13 +34,13 @@ export default function PostItemHorizontal({ post }) {
 
   const {
     title,
-    author,
+    // author,
     publish,
     coverUrl,
     createdAt,
-    totalViews,
-    totalShares,
-    totalComments,
+    // totalViews,
+    // totalShares,
+    // totalComments,
     description,
   } = post;
 
@@ -79,7 +79,7 @@ export default function PostItemHorizontal({ post }) {
               <Iconify icon="eva:more-horizontal-fill" />
             </IconButton>
 
-            <Stack
+            {/* <Stack
               spacing={1.5}
               flexGrow={1}
               direction="row"
@@ -104,7 +104,7 @@ export default function PostItemHorizontal({ post }) {
                 <Iconify icon="solar:share-bold" width={16} sx={{ mr: 0.5 }} />
                 {fShortenNumber(totalShares)}
               </Stack>
-            </Stack>
+            </Stack> */}
           </Stack>
         </Stack>
 
@@ -118,11 +118,11 @@ export default function PostItemHorizontal({ post }) {
               p: 1,
             }}
           >
-            <Avatar
+            {/* <Avatar
               alt={author.name}
               src={author.avatarUrl}
               sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
-            />
+            /> */}
             <Image alt={title} src={coverUrl} sx={{ height: 1, borderRadius: 1.5 }} />
           </Box>
         )}

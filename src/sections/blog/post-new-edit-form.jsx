@@ -210,7 +210,7 @@ export default function PostNewEditForm({ currentPost }) {
               }
             />
 
-            <RHFTextField name="metaTitle" label="Meta title" />
+            {/* <RHFTextField name="metaTitle" label="Meta title" />
 
             <RHFTextField
               name="metaDescription"
@@ -246,9 +246,9 @@ export default function PostNewEditForm({ currentPost }) {
                   />
                 ))
               }
-            />
+            /> */}
 
-            <FormControlLabel control={<Switch defaultChecked />} label="Enable comments" />
+            {/* <FormControlLabel control={<Switch defaultChecked />} label="Enable comments" /> */}
           </Stack>
         </Card>
       </Grid>

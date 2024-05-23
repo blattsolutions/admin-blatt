@@ -34,7 +34,7 @@ export default function OverviewAnalyticsView() {
           mb: { xs: 3, md: 5 },
         }}
       >
-        Hi, Welcome back 👋
+        Hi, Welcome back 👋 Admin
       </Typography>
 
       <Grid container spacing={3}>

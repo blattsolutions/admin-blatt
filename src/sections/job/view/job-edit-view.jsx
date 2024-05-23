@@ -29,7 +29,7 @@ export default function JobEditView({ id }) {
           },
           {
             name: 'Job',
-            href: paths.dashboard.job.root,
+            href: paths.dashboard.form.root,
           },
           { name: currentJob?.title },
         ]}

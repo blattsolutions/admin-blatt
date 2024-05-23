@@ -46,7 +46,7 @@ export default function JobItem({ job, onView, onEdit, onDelete }) {
           <ListItemText
             sx={{ mb: 1 }}
             primary={
-              <Link component={RouterLink} href={paths.dashboard.job.details(id)} color="inherit">
+              <Link component={RouterLink} href={paths.dashboard.form.details(id)} color="inherit">
                 {title}
               </Link>
             }
@@ -127,7 +127,7 @@ export default function JobItem({ job, onView, onEdit, onDelete }) {
           View
         </MenuItem>
 
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             popover.onClose();
             onEdit();
@@ -135,7 +135,7 @@ export default function JobItem({ job, onView, onEdit, onDelete }) {
         >
           <Iconify icon="solar:pen-bold" />
           Edit
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem
           onClick={() => {

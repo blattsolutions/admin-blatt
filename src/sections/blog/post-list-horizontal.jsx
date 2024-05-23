@@ -9,6 +9,7 @@ import PostItemHorizontal from './post-item-horizontal';
 // ----------------------------------------------------------------------
 
 export default function PostListHorizontal({ posts, loading }) {
+  console.log('posts', posts);
   const renderSkeleton = (
     <>
       {[...Array(16)].map((_, index) => (

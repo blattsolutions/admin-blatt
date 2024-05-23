@@ -17,10 +17,9 @@ const icon = (name) => (
 );
 
 const ICONS = {
-  job: icon('ic_job'),
+  form: icon('ic_file'),
   blog: icon('ic_blog'),
   user: icon('ic_user'),
-  analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
 };
 
@@ -41,11 +40,6 @@ export function useNavData() {
             path: paths.dashboard.root,
             icon: ICONS.dashboard,
           },
-          {
-            title: t('analytics'),
-            path: paths.dashboard.general.analytics,
-            icon: ICONS.analytics,
-          },
         ],
       },
 
@@ -54,21 +48,6 @@ export function useNavData() {
       {
         subheader: t('management'),
         items: [
-          // USER
-          {
-            title: t('user'),
-            path: paths.dashboard.user.root,
-            icon: ICONS.user,
-            children: [
-              { title: t('profile'), path: paths.dashboard.user.root },
-              { title: t('cards'), path: paths.dashboard.user.cards },
-              { title: t('list'), path: paths.dashboard.user.list },
-              { title: t('create'), path: paths.dashboard.user.new },
-              { title: t('edit'), path: paths.dashboard.user.demo.edit },
-              { title: t('account'), path: paths.dashboard.user.account },
-            ],
-          },
-
           // BLOG
           {
             title: t('blog'),
@@ -76,23 +55,16 @@ export function useNavData() {
             icon: ICONS.blog,
             children: [
               { title: t('list'), path: paths.dashboard.post.root },
-              { title: t('details'), path: paths.dashboard.post.demo.details },
               { title: t('create'), path: paths.dashboard.post.new },
-              { title: t('edit'), path: paths.dashboard.post.demo.edit },
             ],
           },
 
           // JOB
           {
-            title: t('job'),
-            path: paths.dashboard.job.root,
-            icon: ICONS.job,
-            children: [
-              { title: t('list'), path: paths.dashboard.job.root },
-              { title: t('details'), path: paths.dashboard.job.demo.details },
-              { title: t('create'), path: paths.dashboard.job.new },
-              { title: t('edit'), path: paths.dashboard.job.demo.edit },
-            ],
+            title: t('form_customer'),
+            path: paths.dashboard.form.root,
+            icon: ICONS.form,
+            children: [{ title: t('list'), path: paths.dashboard.form.root }],
           },
         ],
       },

@@ -4,18 +4,18 @@ import { useState, useEffect, useCallback } from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Checkbox from '@mui/material/Checkbox';
+// import Avatar from '@mui/material/Avatar';
+// import Divider from '@mui/material/Divider';
+// import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { fShortenNumber } from 'src/utils/format-number';
+// import { fShortenNumber } from 'src/utils/format-number';
 
 import { useGetPost } from 'src/api/blog';
 import { POST_PUBLISH_OPTIONS } from 'src/_mock';
@@ -25,8 +25,8 @@ import Markdown from 'src/components/markdown';
 import EmptyContent from 'src/components/empty-content';
 
 import PostDetailsHero from '../post-details-hero';
-import PostCommentList from '../post-comment-list';
-import PostCommentForm from '../post-comment-form';
+// import PostCommentList from '../post-comment-list';
+// import PostCommentForm from '../post-comment-form';
 import { PostDetailsSkeleton } from '../post-skeleton';
 import PostDetailsToolbar from '../post-details-toolbar';
 
@@ -109,7 +109,7 @@ export default function PostDetailsView({ title }) {
             ))}
           </Stack>
 
-          <Stack direction="row" alignItems="center">
+          {/* <Stack direction="row" alignItems="center">
             <FormControlLabel
               control={
                 <Checkbox
@@ -136,10 +136,10 @@ export default function PostDetailsView({ title }) {
                 <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
               ))}
             </AvatarGroup>
-          </Stack>
+          </Stack> */}
         </Stack>
 
-        <Stack direction="row" sx={{ mb: 3, mt: 5 }}>
+        {/* <Stack direction="row" sx={{ mb: 3, mt: 5 }}>
           <Typography variant="h4">Comments</Typography>
 
           <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
@@ -147,11 +147,11 @@ export default function PostDetailsView({ title }) {
           </Typography>
         </Stack>
 
-        <PostCommentForm />
+        <PostCommentForm /> */}
 
-        <Divider sx={{ mt: 5, mb: 2 }} />
+        {/* <Divider sx={{ mt: 5, mb: 2 }} />
 
-        <PostCommentList comments={post.comments} />
+        <PostCommentList comments={post.comments} /> */}
       </Stack>
     </>
   );

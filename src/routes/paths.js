@@ -102,15 +102,13 @@ export const paths = {
     calendar: `${ROOTS.DASHBOARD}/calendar`,
     general: {
       app: `${ROOTS.DASHBOARD}/app`,
-      analytics: `${ROOTS.DASHBOARD}/analytics`,
     },
     user: {
-      root: `${ROOTS.DASHBOARD}/user`,
-      new: `${ROOTS.DASHBOARD}/user/new`,
-      list: `${ROOTS.DASHBOARD}/user/list`,
-      cards: `${ROOTS.DASHBOARD}/user/cards`,
-      profile: `${ROOTS.DASHBOARD}/user/profile`,
-      account: `${ROOTS.DASHBOARD}/user/account`,
+      root: `${ROOTS.DASHBOARD}/user/account`,
+      // new: `${ROOTS.DASHBOARD}/user/new`,
+      // list: `${ROOTS.DASHBOARD}/user/list`,
+      // cards: `${ROOTS.DASHBOARD}/user/cards`,
+      // profile: `${ROOTS.DASHBOARD}/user/profile`,
       edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
@@ -128,14 +126,14 @@ export const paths = {
       },
     },
 
-    job: {
-      root: `${ROOTS.DASHBOARD}/job`,
-      new: `${ROOTS.DASHBOARD}/job/new`,
-      details: (id) => `${ROOTS.DASHBOARD}/job/${id}`,
-      edit: (id) => `${ROOTS.DASHBOARD}/job/${id}/edit`,
+    form: {
+      root: `${ROOTS.DASHBOARD}/form`,
+      new: `${ROOTS.DASHBOARD}/form/new`,
+      details: (id) => `${ROOTS.DASHBOARD}/form/${id}`,
+      edit: (id) => `${ROOTS.DASHBOARD}/form/${id}/edit`,
       demo: {
-        details: `${ROOTS.DASHBOARD}/job/${MOCK_ID}`,
-        edit: `${ROOTS.DASHBOARD}/job/${MOCK_ID}/edit`,
+        details: `${ROOTS.DASHBOARD}/form/${MOCK_ID}`,
+        edit: `${ROOTS.DASHBOARD}/form/${MOCK_ID}/edit`,
       },
     },
   },
