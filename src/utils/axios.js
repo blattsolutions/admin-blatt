@@ -1,38 +1,71 @@
 import axios from 'axios';
 
-import { HOST_API } from 'src/config-global';
+import {HOST_API} from 'src/config-global';
 
-// ----------------------------------------------------------------------
+const axiosInstance = axios.create({
+  baseURL: HOST_API,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-const axiosInstance = axios.create({ baseURL: HOST_API });
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 axiosInstance.interceptors.response.use(
-  (res) => res,
-  (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        try {
+          const response = await axios.post(`${HOST_API}/api/auth/refresh-token`, {
+            refreshToken,
+          });
+          const newToken = response.data.token;
+          sessionStorage.setItem('token', newToken);
+          axiosInstance.defaults.headers.common.Authorization = `Bearer ${newToken}`;
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return axiosInstance(originalRequest);
+        } catch (refreshError) {
+          window.location.href = '/auth/jwt/login';
+          return Promise.reject(refreshError);
+        }
+      } else {
+        window.location.href = '/auth/jwt/login';
+      }
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default axiosInstance;
 
-// ----------------------------------------------------------------------
-
 export const fetcher = async (args) => {
   const [url, config] = Array.isArray(args) ? args : [args];
-
-  const res = await axiosInstance.get(url, { ...config });
-
+  const res = await axiosInstance.get(url, {...config});
   return res.data;
 };
-
-// ----------------------------------------------------------------------
 
 export const endpoints = {
   chat: '/api/chat',
   kanban: '/api/kanban',
   calendar: '/api/calendar',
   auth: {
-    me: '/api/auth/me',
-    login: '/api/auth/login',
+    me: '/api/admin/me',
+    login: '/api/admin/login',
     register: '/api/auth/register',
+    refreshToken: '/api/admin/refresh-token',
   },
   mail: {
     list: '/api/mail/list',
@@ -40,10 +73,13 @@ export const endpoints = {
     labels: '/api/mail/labels',
   },
   post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
+    list: '/api/admin/blog-list',
+    details: '/api/admin/detail-blog/',
     latest: '/api/post/latest',
     search: '/api/post/search',
+    new: '/api/admin/new',
+    update: '/api/admin/update-blog',
+    delete: (id) => (`/api/admin/delete-blog/${id}`)
   },
   product: {
     list: '/api/product/list',

@@ -7,17 +7,17 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import { alpha, useTheme } from '@mui/material/styles';
+import {alpha, useTheme} from '@mui/material/styles';
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import {paths} from 'src/routes/paths';
+import {RouterLink} from 'src/routes/components';
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import {useResponsive} from 'src/hooks/use-responsive';
 
-import { fDate } from 'src/utils/format-time';
-import { fShortenNumber } from 'src/utils/format-number';
+import {fDate} from 'src/utils/format-time';
+import {fShortenNumber} from 'src/utils/format-number';
 
-import { AvatarShape } from 'src/assets/illustrations';
+import {AvatarShape} from 'src/assets/illustrations';
 
 import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
@@ -25,12 +25,12 @@ import TextMaxLine from 'src/components/text-max-line';
 
 // ----------------------------------------------------------------------
 
-export default function PostItem({ post, index }) {
+export default function PostItem({post, index}) {
   const theme = useTheme();
 
   const mdUp = useResponsive('up', 'md');
 
-  const { coverUrl, title, totalViews, totalComments, totalShares, author, createdAt } = post;
+  const {coverUrl, title, totalViews, totalComments, totalShares, author, createdAt, _id} = post;
 
   const latestPost = index === 0 || index === 1 || index === 2;
 
@@ -55,6 +55,7 @@ export default function PostItem({ post, index }) {
           totalShares={totalShares}
           totalComments={totalComments}
           index={index}
+          id={_id}
         />
 
         <Image
@@ -72,7 +73,7 @@ export default function PostItem({ post, index }) {
 
   return (
     <Card>
-      <Box sx={{ position: 'relative' }}>
+      <Box sx={{position: 'relative'}}>
         <AvatarShape
           sx={{
             left: 0,
@@ -95,7 +96,7 @@ export default function PostItem({ post, index }) {
           }}
         />
 
-        <Image alt={title} src={coverUrl} ratio="4/3" />
+        <Image alt={title} src={coverUrl} ratio="4/3"/>
       </Box>
 
       <PostContent
@@ -116,11 +117,11 @@ PostItem.propTypes = {
 
 // ----------------------------------------------------------------------
 
-export function PostContent({ title, createdAt, totalViews, totalShares, totalComments, index }) {
+export function PostContent({title, createdAt, totalViews, totalShares, totalComments, index, id}) {
   const mdUp = useResponsive('up', 'md');
 
-  const linkTo = paths.post.details(title);
-
+  const linkTo = paths.post.details(title, id);
+  console.log(linkTo)
   const latestPostLarge = index === 0;
 
   const latestPostSmall = index === 1 || index === 2;
@@ -175,17 +176,17 @@ export function PostContent({ title, createdAt, totalViews, totalShares, totalCo
         }}
       >
         <Stack direction="row" alignItems="center">
-          <Iconify icon="eva:message-circle-fill" width={16} sx={{ mr: 0.5 }} />
+          <Iconify icon="eva:message-circle-fill" width={16} sx={{mr: 0.5}}/>
           {fShortenNumber(totalComments)}
         </Stack>
 
         <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
+          <Iconify icon="solar:eye-bold" width={16} sx={{mr: 0.5}}/>
           {fShortenNumber(totalViews)}
         </Stack>
 
         <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:share-bold" width={16} sx={{ mr: 0.5 }} />
+          <Iconify icon="solar:share-bold" width={16} sx={{mr: 0.5}}/>
           {fShortenNumber(totalShares)}
         </Stack>
       </Stack>
@@ -200,4 +201,5 @@ PostContent.propTypes = {
   totalComments: PropTypes.number,
   totalShares: PropTypes.number,
   totalViews: PropTypes.number,
+  id: PropTypes.number,
 };

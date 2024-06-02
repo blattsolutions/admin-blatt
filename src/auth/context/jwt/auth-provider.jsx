@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import { useMemo, useEffect, useReducer, useCallback } from 'react';
+import {useMemo, useEffect, useReducer, useCallback} from 'react';
 
-import axios, { endpoints } from 'src/utils/axios';
+import axios, {endpoints} from 'src/utils/axios';
 
-import { AuthContext } from './auth-context';
-import { setSession, isValidToken } from './utils';
+import {AuthContext} from './auth-context';
+import {setSession, isValidToken} from './utils';
 
 // ----------------------------------------------------------------------
 /**
@@ -49,21 +49,22 @@ const reducer = (state, action) => {
 
 // ----------------------------------------------------------------------
 
-const STORAGE_KEY = 'accessToken';
+const STORAGE_KEY = 'token';
 
-export function AuthProvider({ children }) {
+export function AuthProvider({children}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const initialize = useCallback(async () => {
     try {
       const accessToken = sessionStorage.getItem(STORAGE_KEY);
-
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
+        const username = localStorage.getItem('username')
+        const response = await axios.post(endpoints.auth.me, {
+          username
+        });
 
-        const response = await axios.get(endpoints.auth.me);
-
-        const { user } = response.data;
+        const {user} = response.data;
 
         dispatch({
           type: 'INITIAL',
@@ -100,22 +101,22 @@ export function AuthProvider({ children }) {
   // LOGIN
   const login = useCallback(async (email, password) => {
     const data = {
-      email,
+      username: email,
       password,
     };
 
     const response = await axios.post(endpoints.auth.login, data);
-
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
+    const {access_token, user, refresh_token} = response.data;
+    localStorage.setItem('refreshToken', refresh_token)
+    localStorage.setItem('username', email)
+    setSession(access_token);
 
     dispatch({
       type: 'LOGIN',
       payload: {
         user: {
           ...user,
-          accessToken,
+          accessToken: access_token,
         },
       },
     });
@@ -132,7 +133,7 @@ export function AuthProvider({ children }) {
 
     const response = await axios.post(endpoints.auth.register, data);
 
-    const { accessToken, user } = response.data;
+    const {accessToken, user} = response.data;
 
     sessionStorage.setItem(STORAGE_KEY, accessToken);
 
@@ -150,6 +151,8 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback(async () => {
     setSession(null);
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("username");
     dispatch({
       type: 'LOGOUT',
     });

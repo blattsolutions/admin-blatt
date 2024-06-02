@@ -1,15 +1,16 @@
-import { Helmet } from 'react-helmet-async';
+import {Helmet} from 'react-helmet-async';
 
-import { useParams } from 'src/routes/hooks';
+import {useParams} from 'src/routes/hooks';
 
-import { PostDetailsHomeView } from 'src/sections/blog/view';
+import {PostDetailsHomeView} from 'src/sections/blog/view';
 
 // ----------------------------------------------------------------------
 
 export default function PostDetailsHomePage() {
-  const params = useParams();
-
-  const { title } = params;
+  const {title} = useParams();
+  const query = new URLSearchParams(window.location.search);
+  const id = query.get('id') || '';
+  console.log(id)
 
   return (
     <>
@@ -17,7 +18,7 @@ export default function PostDetailsHomePage() {
         <title> Post: Details</title>
       </Helmet>
 
-      <PostDetailsHomeView title={`${title}`} />
+      <PostDetailsHomeView title={`${title}`} id={id}/>
     </>
   );
 }
