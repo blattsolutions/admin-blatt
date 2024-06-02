@@ -1,5 +1,5 @@
 import orderBy from 'lodash/orderBy';
-import { useState, useCallback } from 'react';
+import {useState, useCallback, useEffect} from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -7,17 +7,17 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import {paths} from 'src/routes/paths';
+import {RouterLink} from 'src/routes/components';
 
-import { useDebounce } from 'src/hooks/use-debounce';
+import {useDebounce} from 'src/hooks/use-debounce';
 
-import { POST_SORT_OPTIONS } from 'src/_mock';
-import { useGetPosts, useSearchPosts } from 'src/api/blog';
+import {POST_SORT_OPTIONS} from 'src/_mock';
+import {useGetPosts, useSearchPosts} from 'src/api/blog';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
-import { useSettingsContext } from 'src/components/settings';
+import {useSettingsContext} from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import PostSort from '../post-sort';
@@ -37,15 +37,22 @@ export default function PostListView() {
 
   const [sortBy, setSortBy] = useState('latest');
 
+  const [postSize, setPostSize] = useState({
+    all: 0,
+    published: 0,
+    draft: 0,
+  });
+
+
   const [filters, setFilters] = useState(defaultFilters);
 
   const [searchQuery, setSearchQuery] = useState('');
 
   const debouncedQuery = useDebounce(searchQuery);
 
-  const { posts, postsLoading } = useGetPosts();
+  const {posts, postsLoading} = useGetPosts(sortBy, filters);
 
-  const { searchResults, searchLoading } = useSearchPosts(debouncedQuery);
+  const {searchResults, searchLoading} = useSearchPosts(debouncedQuery);
 
   const dataFiltered = applyFilter({
     inputData: posts,
@@ -74,6 +81,15 @@ export default function PostListView() {
     },
     [handleFilters]
   );
+  useEffect(() => {
+    const filter = filters.publish;
+    setPostSize(prevState => (
+      {
+        ...prevState,
+        [filter]: posts?.length
+      }
+    ))
+  }, [filters, posts?.length]);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -97,23 +113,23 @@ export default function PostListView() {
             component={RouterLink}
             href={paths.dashboard.post.new}
             variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
+            startIcon={<Iconify icon="mingcute:add-line"/>}
           >
             New Post
           </Button>
         }
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: {xs: 3, md: 5},
         }}
       />
 
       <Stack
         spacing={3}
         justifyContent="space-between"
-        alignItems={{ xs: 'flex-end', sm: 'center' }}
-        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{xs: 'flex-end', sm: 'center'}}
+        direction={{xs: 'column', sm: 'row'}}
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: {xs: 3, md: 5},
         }}
       >
         <PostSearch
@@ -124,14 +140,14 @@ export default function PostListView() {
           hrefItem={(title) => paths.dashboard.post.details(title)}
         />
 
-        <PostSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
+        <PostSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS}/>
       </Stack>
 
       <Tabs
         value={filters.publish}
         onChange={handleFilterPublish}
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: {xs: 3, md: 5},
         }}
       >
         {['all', 'published', 'draft'].map((tab) => (
@@ -145,27 +161,27 @@ export default function PostListView() {
                 variant={((tab === 'all' || tab === filters.publish) && 'filled') || 'soft'}
                 color={(tab === 'published' && 'info') || 'default'}
               >
-                {tab === 'all' && posts.length}
+                {tab === 'all' && postSize?.all}
 
-                {tab === 'published' && posts.filter((post) => post.publish === 'published').length}
+                {tab === 'published' && postSize?.published}
 
-                {tab === 'draft' && posts.filter((post) => post.publish === 'draft').length}
+                {tab === 'draft' && postSize?.draft}
               </Label>
             }
-            sx={{ textTransform: 'capitalize' }}
+            sx={{textTransform: 'capitalize'}}
           />
         ))}
       </Tabs>
 
-      <PostListHorizontal posts={dataFiltered} loading={postsLoading} />
+      <PostListHorizontal posts={dataFiltered} loading={postsLoading}/>
     </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
-const applyFilter = ({ inputData, filters, sortBy }) => {
-  const { publish } = filters;
+const applyFilter = ({inputData, filters, sortBy}) => {
+  const {publish} = filters;
 
   if (sortBy === 'latest') {
     inputData = orderBy(inputData, ['createdAt'], ['desc']);
@@ -180,7 +196,7 @@ const applyFilter = ({ inputData, filters, sortBy }) => {
   }
 
   if (publish !== 'all') {
-    inputData = inputData.filter((post) => post.publish === publish);
+    // inputData = inputData.filter((post) => post.publish === publish);
   }
 
   return inputData;

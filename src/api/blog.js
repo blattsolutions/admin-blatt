@@ -5,9 +5,8 @@ import {fetcher, endpoints} from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-export function useGetPosts() {
-  const URL = endpoints.post.list;
-
+export function useGetPosts(sortBy, filters) {
+  const URL = endpoints.post.list + '?&' + `sort=${sortBy}` + `&status=${filters?.publish}`;
   const {data, isLoading, error, isValidating} = useSWR(URL, fetcher);
   const memoizedValue = useMemo(
     () => ({
@@ -17,7 +16,7 @@ export function useGetPosts() {
       postsValidating: isValidating,
       postsEmpty: !isLoading && !data?.posts?.length,
     }),
-    [data?.posts, error, isLoading, isValidating]
+    [data?.data, data?.posts?.length, error, isLoading, isValidating]
   );
 
   return memoizedValue;
