@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -8,26 +9,25 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
-import {paths} from 'src/routes/paths';
-import {useRouter} from 'src/routes/hooks';
-import {RouterLink} from 'src/routes/components';
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import {useResponsive} from 'src/hooks/use-responsive';
+import { useResponsive } from 'src/hooks/use-responsive';
 
-import {fDate} from 'src/utils/format-time';
+import { fDate } from 'src/utils/format-time';
 // import { fShortenNumber } from 'src/utils/format-number';
+import axiosInstance, { endpoints } from 'src/utils/axios';
 
 import Label from 'src/components/label';
 import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
 import TextMaxLine from 'src/components/text-max-line';
-import CustomPopover, {usePopover} from 'src/components/custom-popover';
-import React from "react";
-import axiosInstance, {endpoints} from "../../utils/axios.js";
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function PostItemHorizontal({post}) {
+export default function PostItemHorizontal({ post }) {
   const popover = usePopover();
 
   const router = useRouter();
@@ -37,15 +37,16 @@ export default function PostItemHorizontal({post}) {
     title,
     // author,
     publish,
-    coverUrl,
+    // coverUrl,
     createdAt,
     // totalViews,
     // totalShares,
     // totalComments,
     description,
     thumbnail,
-    _id
+    _id,
   } = post;
+
   return (
     <>
       <Stack component={Card} direction="row">
@@ -54,31 +55,35 @@ export default function PostItemHorizontal({post}) {
             p: (theme) => theme.spacing(3, 3, 2, 3),
           }}
         >
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{mb: 2}}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
             <Label variant="soft" color={(publish === 'published' && 'info') || 'default'}>
               {publish}
             </Label>
 
-            <Box component="span" sx={{typography: 'caption', color: 'text.disabled'}}>
+            <Box component="span" sx={{ typography: 'caption', color: 'text.disabled' }}>
               {fDate(createdAt)}
             </Box>
           </Stack>
 
           <Stack spacing={1} flexGrow={1}>
-            <Link color="inherit" component={RouterLink} href={paths.dashboard.post.details(title, _id)}>
+            <Link
+              color="inherit"
+              component={RouterLink}
+              href={paths.dashboard.post.details(title, _id)}
+            >
               <TextMaxLine variant="subtitle2" line={2}>
                 {title}
               </TextMaxLine>
             </Link>
 
-            <TextMaxLine variant="body2" sx={{color: 'text.secondary'}}>
+            <TextMaxLine variant="body2" sx={{ color: 'text.secondary' }}>
               {description}
             </TextMaxLine>
           </Stack>
 
           <Stack direction="row" alignItems="center">
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-              <Iconify icon="eva:more-horizontal-fill"/>
+              <Iconify icon="eva:more-horizontal-fill" />
             </IconButton>
 
             {/* <Stack
@@ -125,7 +130,7 @@ export default function PostItemHorizontal({post}) {
               src={author.avatarUrl}
               sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
             /> */}
-            <Image alt={title} src={thumbnail} sx={{height: 1, borderRadius: 1.5}}/>
+            <Image alt={title} src={thumbnail} sx={{ height: 1, borderRadius: 1.5 }} />
           </Box>
         )}
       </Stack>
@@ -134,7 +139,7 @@ export default function PostItemHorizontal({post}) {
         open={popover.open}
         onClose={popover.onClose}
         arrow="bottom-center"
-        sx={{width: 140}}
+        sx={{ width: 140 }}
       >
         <MenuItem
           onClick={() => {
@@ -142,7 +147,7 @@ export default function PostItemHorizontal({post}) {
             router.push(paths.dashboard.post.details(title));
           }}
         >
-          <Iconify icon="solar:eye-bold"/>
+          <Iconify icon="solar:eye-bold" />
           View
         </MenuItem>
 
@@ -152,20 +157,20 @@ export default function PostItemHorizontal({post}) {
             router.push(paths.dashboard.post.edit(title, _id));
           }}
         >
-          <Iconify icon="solar:pen-bold"/>
+          <Iconify icon="solar:pen-bold" />
           Edit
         </MenuItem>
 
         <MenuItem
           onClick={() => {
             popover.onClose();
-            axiosInstance.delete(endpoints.post.delete(_id)).then(res => {
+            axiosInstance.delete(endpoints.post.delete(_id)).then((res) => {
               router.reload();
-            })
+            });
           }}
-          sx={{color: 'error.main'}}
+          sx={{ color: 'error.main' }}
         >
-          <Iconify icon="solar:trash-bin-trash-bold"/>
+          <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
         </MenuItem>
       </CustomPopover>
@@ -179,11 +184,12 @@ PostItemHorizontal.propTypes = {
     coverUrl: PropTypes.string,
     createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     description: PropTypes.string,
+    thumbnail: PropTypes.string,
     publish: PropTypes.string,
     title: PropTypes.string,
     totalComments: PropTypes.number,
     totalShares: PropTypes.number,
     totalViews: PropTypes.number,
-    _id: PropTypes.string
+    _id: PropTypes.string,
   }),
 };

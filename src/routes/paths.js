@@ -1,6 +1,6 @@
-import {paramCase} from 'src/utils/change-case';
+import { paramCase } from 'src/utils/change-case';
 
-import {_id, _postTitles} from 'src/_mock/assets';
+import { _id, _postTitles } from 'src/_mock/assets';
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ export const paths = {
   },
   post: {
     root: `/post`,
-    details: (title, id) => `/post/${paramCase(title)}?id=` + id,
+    details: (title, id) => `/post/${paramCase(title)}?id=${id}`,
     demo: {
       details: `/post/${paramCase(MOCK_TITLE)}`,
     },
@@ -118,8 +118,8 @@ export const paths = {
     post: {
       root: `${ROOTS.DASHBOARD}/post`,
       new: `${ROOTS.DASHBOARD}/post/new`,
-      details: (title, id) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}?id=` + id,
-      edit: (title, id) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}/edit?id=` + id,
+      details: (title, id) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}?id=${id}`,
+      edit: (title, id) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}/edit?id=${id}`,
       demo: {
         details: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}`,
         edit: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}/edit`,
