@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
-import Label from 'src/components/label';
+// import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ export default function NavUpgrade() {
             {user?.displayName?.charAt(0).toUpperCase()}
           </Avatar>
 
-          <Label
+          {/* <Label
             color="success"
             variant="filled"
             sx={{
@@ -39,7 +39,7 @@ export default function NavUpgrade() {
             }}
           >
             Free
-          </Label>
+          </Label> */}
         </Box>
 
         <Stack spacing={0.5} sx={{ mb: 2, mt: 1.5, width: 1 }}>

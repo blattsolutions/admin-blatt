@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {HOST_API} from 'src/config-global';
+import { HOST_API } from 'src/config-global';
 
 const axiosInstance = axios.create({
   baseURL: HOST_API,
@@ -9,16 +9,13 @@ const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+axiosInstance.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 axiosInstance.interceptors.response.use(
   (response) => response,
@@ -45,7 +42,16 @@ axiosInstance.interceptors.response.use(
         window.location.href = '/auth/jwt/login';
       }
     }
-    return Promise.reject(error);
+
+    // Create a new Error object with additional properties
+    const customError = new Error(error.message);
+    customError.config = error.config;
+    customError.code = error.code;
+    customError.request = error.request;
+    if (error.response) {
+      customError.response = error.response;
+    }
+    return Promise.reject(customError);
   }
 );
 
@@ -53,7 +59,7 @@ export default axiosInstance;
 
 export const fetcher = async (args) => {
   const [url, config] = Array.isArray(args) ? args : [args];
-  const res = await axiosInstance.get(url, {...config});
+  const res = await axiosInstance.get(url, { ...config });
   return res.data;
 };
 
@@ -79,7 +85,7 @@ export const endpoints = {
     search: '/api/post/search',
     new: '/api/admin/new',
     update: '/api/admin/update-blog',
-    delete: (id) => (`/api/admin/delete-blog/${id}`)
+    delete: (id) => `/api/admin/delete-blog/${id}`,
   },
   product: {
     list: '/api/product/list',

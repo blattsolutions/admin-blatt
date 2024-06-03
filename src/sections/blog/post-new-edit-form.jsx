@@ -158,20 +158,18 @@ export default function PostNewEditForm({ currentPost }) {
             <RHFTextField name="title" label="Post Title" />
 
             <RHFTextField name="description" label="Description" multiline rows={3} />
-
             <Stack spacing={1.5}>
-              <Typography variant="subtitle2">Content</Typography>
-              <RHFEditor simple name="content" />
-            </Stack>
-
-            <Stack spacing={1.5}>
-              <Typography variant="subtitle2">Cover</Typography>
+              <Typography variant="subtitle2">Thumbnail</Typography>
               <RHFUpload
                 name="coverUrl"
                 maxSize={3145728}
                 onDrop={handleDrop}
                 onDelete={handleRemoveFile}
               />
+            </Stack>
+            <Stack spacing={1.5}>
+              <Typography variant="subtitle2">Content</Typography>
+              <RHFEditor simple name="content" />
             </Stack>
           </Stack>
         </Card>

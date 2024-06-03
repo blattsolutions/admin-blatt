@@ -36,12 +36,12 @@ export default function PostItemHorizontal({ post }) {
   const {
     title,
     // author,
-    publish,
     // coverUrl,
     createdAt,
     // totalViews,
     // totalShares,
     // totalComments,
+    status,
     description,
     thumbnail,
     _id,
@@ -56,8 +56,8 @@ export default function PostItemHorizontal({ post }) {
           }}
         >
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-            <Label variant="soft" color={(publish === 'published' && 'info') || 'default'}>
-              {publish}
+            <Label variant="soft" color={status ? 'info' : 'default'}>
+              {status ? 'Published' : 'Draft'}
             </Label>
 
             <Box component="span" sx={{ typography: 'caption', color: 'text.disabled' }}>
@@ -144,7 +144,7 @@ export default function PostItemHorizontal({ post }) {
         <MenuItem
           onClick={() => {
             popover.onClose();
-            router.push(paths.dashboard.post.details(title));
+            router.push(paths.dashboard.post.details(title, _id));
           }}
         >
           <Iconify icon="solar:eye-bold" />
@@ -184,8 +184,8 @@ PostItemHorizontal.propTypes = {
     coverUrl: PropTypes.string,
     createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     description: PropTypes.string,
+    status: PropTypes.number,
     thumbnail: PropTypes.string,
-    publish: PropTypes.string,
     title: PropTypes.string,
     totalComments: PropTypes.number,
     totalShares: PropTypes.number,

@@ -53,7 +53,6 @@ export default function JwtLoginView() {
   });
 
   const {
-    reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -64,9 +63,7 @@ export default function JwtLoginView() {
 
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
-      console.error(error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.message);
+      setErrorMsg(typeof error === 'string' ? error : error?.response?.data.message);
     }
   });
 
@@ -124,9 +121,9 @@ export default function JwtLoginView() {
     <>
       {renderHead}
 
-      {/*<Alert severity="info" sx={{ mb: 3 }}>*/}
-      {/*  Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>*/}
-      {/*</Alert>*/}
+      {/* <Alert severity="info" sx={{ mb: 3 }}>
+       Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
+      </Alert> */}
 
       {!!errorMsg && (
         <Alert severity="error" sx={{ mb: 3 }}>
