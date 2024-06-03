@@ -34,26 +34,26 @@ export const isValidToken = (accessToken) => {
 
 // ----------------------------------------------------------------------
 
-export const tokenExpired = (exp) => {
-  // eslint-disable-next-line prefer-const
-  let expiredTimer;
-
-  const currentTime = Date.now();
-
-  // Test token expires after 10s
-  // const timeLeft = currentTime + 10000 - currentTime; // ~10s
-  const timeLeft = exp * 1000 - currentTime;
-
-  clearTimeout(expiredTimer);
-
-  expiredTimer = setTimeout(() => {
-    alert('Token expired');
-
-    sessionStorage.removeItem('accessToken');
-
-    window.location.href = paths.auth.jwt.login;
-  }, timeLeft);
-};
+// export const tokenExpired = (exp) => {
+//   // eslint-disable-next-line prefer-const
+//   let expiredTimer;
+//
+//   const currentTime = Date.now();
+//
+//   // Test token expires after 10s
+//   // const timeLeft = currentTime + 10000 - currentTime; // ~10s
+//   const timeLeft = exp * 1000 - currentTime;
+//
+//   clearTimeout(expiredTimer);
+//
+//   expiredTimer = setTimeout(() => {
+//     alert('Token expired');
+//
+//     sessionStorage.removeItem('accessToken');
+//
+//     window.location.href = paths.auth.jwt.login;
+//   }, timeLeft);
+// };
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ export const setSession = (accessToken) => {
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
     const {exp} = jwtDecode(accessToken);
-    tokenExpired(exp);
+    // tokenExpired(exp);
   } else {
     sessionStorage.removeItem('token');
     delete axios.defaults.headers.common.Authorization;

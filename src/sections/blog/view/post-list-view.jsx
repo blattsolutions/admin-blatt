@@ -1,5 +1,5 @@
 import orderBy from 'lodash/orderBy';
-import { useState, useEffect, useCallback } from 'react';
+import {useState, useEffect, useCallback} from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -7,22 +7,27 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import {paths} from 'src/routes/paths';
+import {RouterLink} from 'src/routes/components';
 
-import { useDebounce } from 'src/hooks/use-debounce';
+import {useDebounce} from 'src/hooks/use-debounce';
 
-import { POST_SORT_OPTIONS } from 'src/_mock';
-import { useGetPosts, useSearchPosts } from 'src/api/blog';
+import {POST_SORT_OPTIONS} from 'src/_mock';
+import {useGetPosts, useSearchPosts} from 'src/api/blog';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
-import { useSettingsContext } from 'src/components/settings';
+import {useSettingsContext} from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import PostSort from '../post-sort';
 import PostSearch from '../post-search';
 import PostListHorizontal from '../post-list-horizontal';
+import axios from "../../../utils/axios.js";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import {GridSearchIcon} from "@mui/x-data-grid";
+import useDebouncedValue from "../../../hooks/useDebouncedValue.jsx";
 
 // ----------------------------------------------------------------------
 
@@ -43,15 +48,24 @@ export default function PostListView() {
     draft: 0,
   });
 
+  const [page, setPage] = useState(1);
+
+
   const [filters, setFilters] = useState(defaultFilters);
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const debouncedQuery = useDebounce(searchQuery);
+  // const debouncedQuery = useDebounce(searchQuery);
 
-  const { posts, postsLoading } = useGetPosts(sortBy, filters);
+  // const {posts, postsLoading} = useGetPosts(page, sortBy, filters, searchQuery);
 
-  const { searchResults, searchLoading } = useSearchPosts(debouncedQuery);
+  // const {searchResults, searchLoading} = useSearchPosts(debouncedQuery);
+
+  const debouncedQuery = useDebouncedValue(searchQuery, 500);
+
+  const { posts, postsLoading } = useGetPosts(page, sortBy, filters, debouncedQuery);
+
+  // const { searchResults, searchLoading } = useSearchPosts(debouncedQuery);
 
   const dataFiltered = applyFilter({
     inputData: posts,
@@ -68,6 +82,7 @@ export default function PostListView() {
       ...prevState,
       [name]: value,
     }));
+    setPage(1);
   }, []);
 
   const handleSearch = useCallback((inputValue) => {
@@ -81,12 +96,15 @@ export default function PostListView() {
     [handleFilters]
   );
   useEffect(() => {
-    const filter = filters.publish;
-    setPostSize((prevState) => ({
-      ...prevState,
-      [filter]: posts?.length,
-    }));
-  }, [filters, posts?.length]);
+    axios.get('/api/admin/total-blog').then(({data}) => {
+      setPostSize((prevState) => ({
+        all: data.totalPublished + data.totalDraft,
+        published: data.totalPublished,
+        draft: data.totalDraft,
+      }));
+    })
+
+  }, []);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -110,41 +128,55 @@ export default function PostListView() {
             component={RouterLink}
             href={paths.dashboard.post.new}
             variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
+            startIcon={<Iconify icon="mingcute:add-line"/>}
           >
             New Post
           </Button>
         }
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: {xs: 3, md: 5},
         }}
       />
 
       <Stack
         spacing={3}
         justifyContent="space-between"
-        alignItems={{ xs: 'flex-end', sm: 'center' }}
-        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{xs: 'flex-end', sm: 'center'}}
+        direction={{xs: 'column', sm: 'row'}}
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: {xs: 3, md: 5},
         }}
       >
-        <PostSearch
-          query={debouncedQuery}
-          results={searchResults}
-          onSearch={handleSearch}
-          loading={searchLoading}
-          hrefItem={(title) => paths.dashboard.post.details(title)}
+        <TextField
+          value={searchQuery}
+          onChange={(e) => handleSearch(e.target.value)}
+          placeholder="Search posts..."
+          variant="outlined"
+          sx={{mb: {xs: 3, md: 5}, width: '400px'}}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <GridSearchIcon/>
+              </InputAdornment>
+            ),
+          }}
         />
+        {/*<PostSearch*/}
+        {/*  query={debouncedQuery}*/}
+        {/*  results={searchResults}*/}
+        {/*  onSearch={handleSearch}*/}
+        {/*  loading={searchLoading}*/}
+        {/*  hrefItem={(title) => paths.dashboard.post.details(title)}*/}
+        {/*/>*/}
 
-        <PostSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
+        <PostSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS}/>
       </Stack>
 
       <Tabs
         value={filters.publish}
         onChange={handleFilterPublish}
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: {xs: 3, md: 5},
         }}
       >
         {['all', 'published', 'draft'].map((tab) => (
@@ -165,20 +197,27 @@ export default function PostListView() {
                 {tab === 'draft' && postSize?.draft}
               </Label>
             }
-            sx={{ textTransform: 'capitalize' }}
+            sx={{textTransform: 'capitalize'}}
           />
         ))}
       </Tabs>
 
-      <PostListHorizontal posts={dataFiltered} loading={postsLoading} />
+      <PostListHorizontal
+        posts={dataFiltered}
+        loading={postsLoading}
+        page={page}
+        totalPage={Math.ceil(postSize[filters.publish] / 10)}
+        onChangePage={(page) => {
+          setPage(page);
+        }}/>
     </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
-const applyFilter = ({ inputData, filters, sortBy }) => {
-  const { publish } = filters;
+const applyFilter = ({inputData, filters, sortBy}) => {
+  const {publish} = filters;
 
   if (sortBy === 'latest') {
     inputData = orderBy(inputData, ['createdAt'], ['desc']);

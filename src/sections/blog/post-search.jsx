@@ -37,11 +37,11 @@ export default function PostSearch({ query, results, onSearch, hrefItem, loading
       loading={loading}
       autoHighlight
       popupIcon={null}
-      options={results}
+      options={[]}
       onInputChange={(event, newValue) => onSearch(newValue)}
-      getOptionLabel={(option) => option.title}
-      noOptionsText={<SearchNotFound query={query} sx={{ bgcolor: 'unset' }} />}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
+      // getOptionLabel={(option) => option.title}
+      // noOptionsText={<SearchNotFound query={query} sx={{ bgcolor: 'unset' }} />}
+      // isOptionEqualToValue={(option, value) => option.id === value.id}
       slotProps={{
         popper: {
           placement: 'bottom-start',

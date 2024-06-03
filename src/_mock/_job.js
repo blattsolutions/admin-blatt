@@ -123,7 +123,7 @@ const CONTENT = `
 </ul>
 `;
 
-export const _jobs = [...Array(12)].map((_, index) => {
+export const _jobs = [...Array(50)].map((_, index) => {
   const publish = index % 3 ? 'published' : 'draft';
 
   const salary = {

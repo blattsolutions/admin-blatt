@@ -1,13 +1,13 @@
 import useSWR from 'swr';
-import { useMemo } from 'react';
+import {useMemo} from 'react';
 
-import { fetcher, endpoints } from 'src/utils/axios';
+import {fetcher, endpoints} from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-export function useGetPosts(sortBy, filters) {
-  const URL = `${endpoints.post.list}?sort=${sortBy}&status=${filters?.publish}`;
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+export function useGetPosts(page, sortBy, filters, search) {
+  const URL = `${endpoints.post.list}?page=${page}&sort=${sortBy}&status=${filters?.publish}&search=${search}`;
+  const {data, isLoading, error, isValidating} = useSWR(URL, fetcher);
   const memoizedValue = useMemo(
     () => ({
       posts: data?.data || [],
@@ -26,7 +26,7 @@ export function useGetPosts(sortBy, filters) {
 
 export function useGetPost(title, id) {
   const URL = title ? `${endpoints.post.details}?id=${id}` : '';
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+  const {data, isLoading, error, isValidating} = useSWR(URL, fetcher);
   const memoizedValue = useMemo(
     () => ({
       post: data?.data,
@@ -43,9 +43,9 @@ export function useGetPost(title, id) {
 // ----------------------------------------------------------------------
 
 export function useGetLatestPosts(title) {
-  const URL = title ? [endpoints.post.latest, { params: { title } }] : '';
+  const URL = title ? [endpoints.post.latest, {params: {title}}] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+  const {data, isLoading, error, isValidating} = useSWR(URL, fetcher);
 
   const memoizedValue = useMemo(
     () => ({
@@ -64,9 +64,9 @@ export function useGetLatestPosts(title) {
 // ----------------------------------------------------------------------
 
 export function useSearchPosts(query) {
-  const URL = query ? [endpoints.post.search, { params: { query } }] : '';
+  const URL = query ? [endpoints.post.search, {params: {query}}] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {
+  const {data, isLoading, error, isValidating} = useSWR(URL, fetcher, {
     keepPreviousData: true,
   });
 

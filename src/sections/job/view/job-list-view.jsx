@@ -31,6 +31,10 @@ import JobSort from '../job-sort';
 import JobSearch from '../job-search';
 // import JobFilters from '../job-filters';
 import JobFiltersResult from '../job-filters-result';
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import {GridSearchIcon} from "@mui/x-data-grid";
+import useDebouncedValue from "../../../hooks/useDebouncedValue.jsx";
 
 // ----------------------------------------------------------------------
 
@@ -46,11 +50,11 @@ const defaultFilters = {
 
 export default function JobListView() {
   const settings = useSettingsContext();
-
   // const openFilters = useBoolean();
-
+  const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('latest');
-
+  const debouncedQuery = useDebouncedValue(searchQuery, 500);
+  console.log(_jobs)
   const [search, setSearch] = useState({
     query: '',
     results: [],
@@ -111,13 +115,20 @@ export default function JobListView() {
       alignItems={{ xs: 'flex-end', sm: 'center' }}
       direction={{ xs: 'column', sm: 'row' }}
     >
-      <JobSearch
-        query={search.query}
-        results={search.results}
-        onSearch={handleSearch}
-        hrefItem={(id) => paths.dashboard.form.details(id)}
+      <TextField
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)}
+        placeholder="Search..."
+        variant="outlined"
+        sx={{mb: {xs: 3, md: 5}, width: '400px'}}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <GridSearchIcon/>
+            </InputAdornment>
+          ),
+        }}
       />
-
       <Stack direction="row" spacing={1} flexShrink={0}>
         {/* <JobFilters
           open={openFilters.value}

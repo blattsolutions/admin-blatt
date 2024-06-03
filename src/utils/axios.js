@@ -26,10 +26,10 @@ axiosInstance.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken');
       if (refreshToken) {
         try {
-          const response = await axios.post(`${HOST_API}/api/auth/refresh-token`, {
-            refreshToken,
+          const response = await axios.post(`${HOST_API}${endpoints.auth.refreshToken}`, {
+            refresh_token:refreshToken,
           });
-          const newToken = response.data.token;
+          const newToken = response.data.access_token;
           sessionStorage.setItem('token', newToken);
           axiosInstance.defaults.headers.common.Authorization = `Bearer ${newToken}`;
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -80,11 +80,13 @@ export const endpoints = {
   },
   post: {
     list: '/api/admin/blog-list',
+    tags: '/api/admin/tags',
     details: '/api/admin/detail-blog/',
     latest: '/api/post/latest',
     search: '/api/post/search',
     new: '/api/admin/new',
     update: '/api/admin/update-blog',
+    updateStatus: '/api/admin/update-blog-status',
     delete: (id) => `/api/admin/delete-blog/${id}`,
   },
   product: {

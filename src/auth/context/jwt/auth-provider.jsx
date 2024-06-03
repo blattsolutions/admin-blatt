@@ -5,6 +5,7 @@ import axios, {endpoints} from 'src/utils/axios';
 
 import {AuthContext} from './auth-context';
 import {setSession, isValidToken} from './utils';
+import {HOST_API} from "../../../config-global.js";
 
 // ----------------------------------------------------------------------
 /**
@@ -56,7 +57,15 @@ export function AuthProvider({children}) {
 
   const initialize = useCallback(async () => {
     try {
-      const accessToken = sessionStorage.getItem(STORAGE_KEY);
+      let accessToken = sessionStorage.getItem(STORAGE_KEY);
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!accessToken && refreshToken) {
+        const response = await axios.post(`${HOST_API}${endpoints.auth.refreshToken}`, {
+          refresh_token:refreshToken,
+        });
+        accessToken = response.data.access_token;
+        sessionStorage.setItem('token', accessToken);
+      }
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
         const username = localStorage.getItem('username')
