@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {useState, useEffect, useCallback} from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -12,13 +12,13 @@ import Typography from '@mui/material/Typography';
 // import FormControlLabel from '@mui/material/FormControlLabel';
 // import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 
-import {paths} from 'src/routes/paths';
-import {RouterLink} from 'src/routes/components';
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 // import { fShortenNumber } from 'src/utils/format-number';
 
-import {useGetPost} from 'src/api/blog';
-import {POST_PUBLISH_OPTIONS} from 'src/_mock';
+import { useGetPost } from 'src/api/blog';
+import { POST_PUBLISH_OPTIONS } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import Markdown from 'src/components/markdown';
@@ -27,16 +27,16 @@ import EmptyContent from 'src/components/empty-content';
 import PostDetailsHero from '../post-details-hero';
 // import PostCommentList from '../post-comment-list';
 // import PostCommentForm from '../post-comment-form';
-import {PostDetailsSkeleton} from '../post-skeleton';
+import { PostDetailsSkeleton } from '../post-skeleton';
 import PostDetailsToolbar from '../post-details-toolbar';
 
 // ----------------------------------------------------------------------
 
-export default function PostDetailsView({title}) {
-  const [publish, setPublish] = useState('');
+export default function PostDetailsView({ title }) {
+  const [publish, setPublish] = useState();
   const query = new URLSearchParams(window.location.search);
   const id = query.get('id') || '';
-  const {post, postError, postLoading} = useGetPost(title, id);
+  const { post, postError, postLoading } = useGetPost(title, id);
 
   const handleChangePublish = useCallback((newValue) => {
     setPublish(newValue);
@@ -44,11 +44,11 @@ export default function PostDetailsView({title}) {
 
   useEffect(() => {
     if (post) {
-      setPublish(post?.publish);
+      setPublish(post?.status ? 'published' : 'draft');
     }
   }, [post]);
 
-  const renderSkeleton = <PostDetailsSkeleton/>;
+  const renderSkeleton = <PostDetailsSkeleton />;
 
   const renderError = (
     <EmptyContent
@@ -58,8 +58,8 @@ export default function PostDetailsView({title}) {
         <Button
           component={RouterLink}
           href={paths.dashboard.post.root}
-          startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16}/>}
-          sx={{mt: 3}}
+          startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
+          sx={{ mt: 3 }}
         >
           Back to List
         </Button>
@@ -74,27 +74,34 @@ export default function PostDetailsView({title}) {
     <>
       <PostDetailsToolbar
         backLink={paths.dashboard.post.root}
-        editLink={paths.dashboard.post.edit(`${post?.title}`)}
-        liveLink={paths.post.details(`${post?.title}`)}
-        publish={publish || ''}
+        editLink={paths.dashboard.post.edit(post?.title, post._id)}
+        liveLink={paths.post.details(post?.title)}
+        publish={publish}
         onChangePublish={handleChangePublish}
         publishOptions={POST_PUBLISH_OPTIONS}
       />
-
-      <PostDetailsHero title={post.title} coverUrl={post.coverUrl}/>
 
       <Stack
         sx={{
           maxWidth: 720,
           mx: 'auto',
-          mt: {xs: 5, md: 10},
+          mt: { xs: 5, md: 10 },
         }}
       >
-        <Typography variant="subtitle1" sx={{mb: 5}}>
+        <Typography variant="subtitle1" sx={{ mb: 5 }}>
           {post.description}
         </Typography>
+        <PostDetailsHero coverUrl={post.thumbnail} />
+      </Stack>
 
-        <Markdown children={post.content}/>
+      <Stack
+        sx={{
+          maxWidth: 720,
+          mx: 'auto',
+          mt: { xs: 5, md: 10 },
+        }}
+      >
+        <Markdown children={post.content} />
 
         <Stack
           spacing={3}
@@ -106,7 +113,7 @@ export default function PostDetailsView({title}) {
         >
           <Stack direction="row" flexWrap="wrap" spacing={1}>
             {post.tags.map((tag) => (
-              <Chip key={tag} label={tag?.title} variant="soft"/>
+              <Chip key={tag} label={tag?.title} variant="soft" />
             ))}
           </Stack>
 

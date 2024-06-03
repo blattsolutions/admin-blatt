@@ -75,7 +75,7 @@ export const JOB_PUBLISH_OPTIONS = [
 
 export const JOB_SORT_OPTIONS = [
   { value: 'latest', label: 'Latest' },
-  { value: 'popular', label: 'Popular' },
+  // { value: 'popular', label: 'Popular' },
   { value: 'oldest', label: 'Oldest' },
 ];
 

@@ -4,27 +4,27 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
-import SpeedDial from '@mui/material/SpeedDial';
+// import SpeedDial from '@mui/material/SpeedDial';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import { alpha, useTheme } from '@mui/material/styles';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
+// import SpeedDialAction from '@mui/material/SpeedDialAction';
 
-import { useResponsive } from 'src/hooks/use-responsive';
+// import { useResponsive } from 'src/hooks/use-responsive';
 
 import { fDate } from 'src/utils/format-time';
 
-import { _socials } from 'src/_mock';
+// import { _socials } from 'src/_mock';
 import { bgGradient } from 'src/theme/css';
 
-import Iconify from 'src/components/iconify';
+// import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
 export default function PostDetailsHero({ title, author, coverUrl, createdAt }) {
   const theme = useTheme();
 
-  const smUp = useResponsive('up', 'sm');
+  // const smUp = useResponsive('up', 'sm');
 
   return (
     <Box
@@ -89,7 +89,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
             </Stack>
           )}
 
-          <SpeedDial
+          {/* <SpeedDial
             direction={smUp ? 'left' : 'up'}
             ariaLabel="Share post"
             icon={<Iconify icon="solar:share-bold" />}
@@ -109,7 +109,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
                 FabProps={{ color: 'default' }}
               />
             ))}
-          </SpeedDial>
+          </SpeedDial> */}
         </Stack>
       </Container>
     </Box>
