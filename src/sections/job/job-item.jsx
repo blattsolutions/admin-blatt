@@ -11,43 +11,43 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import {paths} from 'src/routes/paths';
+import {RouterLink} from 'src/routes/components';
 
-import { fDate } from 'src/utils/format-time';
-import { fCurrency } from 'src/utils/format-number';
+import {fDate} from 'src/utils/format-time';
+import {fCurrency} from 'src/utils/format-number';
 
 import Iconify from 'src/components/iconify';
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import CustomPopover, {usePopover} from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function JobItem({ job, onView, onEdit, onDelete }) {
+export default function JobItem({job, onView, onEdit, onDelete}) {
   const popover = usePopover();
 
-  const { id, title, company, createdAt, candidates, experience, employmentTypes, salary, role } =
+  const {_id, name, company, createdAt, candidates, experience, employmentTypes, salary, role} =
     job;
 
   return (
     <>
       <Card>
-        <IconButton onClick={popover.onOpen} sx={{ position: 'absolute', top: 8, right: 8 }}>
-          <Iconify icon="eva:more-vertical-fill" />
+        <IconButton onClick={popover.onOpen} sx={{position: 'absolute', top: 8, right: 8}}>
+          <Iconify icon="eva:more-vertical-fill"/>
         </IconButton>
 
-        <Stack sx={{ p: 3, pb: 2 }}>
+        <Stack sx={{p: 3, pb: 2}}>
           <Avatar
-            alt={company.name}
-            src={company.logo}
+            alt={company?.name ?? "Fsoft"}
+            src={company?.logo ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjNrth9D12U-w1YDVelzT5eSzetDjf_zGJ4Q&s"}
             variant="rounded"
-            sx={{ width: 48, height: 48, mb: 2 }}
+            sx={{width: 48, height: 48, mb: 2}}
           />
 
           <ListItemText
-            sx={{ mb: 1 }}
+            sx={{mb: 1}}
             primary={
-              <Link component={RouterLink} href={paths.dashboard.form.details(id)} color="inherit">
-                {title}
+              <Link component={RouterLink} href={paths.dashboard.form.details(_id)} color="inherit">
+                {name}
               </Link>
             }
             secondary={`Posted date: ${fDate(createdAt)}`}
@@ -66,32 +66,32 @@ export default function JobItem({ job, onView, onEdit, onDelete }) {
             spacing={0.5}
             direction="row"
             alignItems="center"
-            sx={{ color: 'primary.main', typography: 'caption' }}
+            sx={{color: 'primary.main', typography: 'caption'}}
           >
-            <Iconify width={16} icon="solar:users-group-rounded-bold" />
-            {candidates.length} Candidates
+            <Iconify width={16} icon="solar:users-group-rounded-bold"/>
+            {candidates?.length??0} Candidates
           </Stack>
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{borderStyle: 'dashed'}}/>
 
-        <Box rowGap={1.5} display="grid" gridTemplateColumns="repeat(2, 1fr)" sx={{ p: 3 }}>
+        <Box rowGap={1.5} display="grid" gridTemplateColumns="repeat(2, 1fr)" sx={{p: 3}}>
           {[
             {
               label: experience,
-              icon: <Iconify width={16} icon="carbon:skill-level-basic" sx={{ flexShrink: 0 }} />,
+              icon: <Iconify width={16} icon="carbon:skill-level-basic" sx={{flexShrink: 0}}/>,
             },
             {
-              label: employmentTypes.join(', '),
-              icon: <Iconify width={16} icon="solar:clock-circle-bold" sx={{ flexShrink: 0 }} />,
+              label: employmentTypes?.join(', '),
+              icon: <Iconify width={16} icon="solar:clock-circle-bold" sx={{flexShrink: 0}}/>,
             },
             {
-              label: salary.negotiable ? 'Negotiable' : fCurrency(salary.price),
-              icon: <Iconify width={16} icon="solar:wad-of-money-bold" sx={{ flexShrink: 0 }} />,
+              label: salary?.negotiable ? 'Negotiable' : fCurrency(salary?.price),
+              icon: <Iconify width={16} icon="solar:wad-of-money-bold" sx={{flexShrink: 0}}/>,
             },
             {
               label: role,
-              icon: <Iconify width={16} icon="solar:user-rounded-bold" sx={{ flexShrink: 0 }} />,
+              icon: <Iconify width={16} icon="solar:user-rounded-bold" sx={{flexShrink: 0}}/>,
             },
           ].map((item) => (
             <Stack
@@ -100,7 +100,7 @@ export default function JobItem({ job, onView, onEdit, onDelete }) {
               flexShrink={0}
               direction="row"
               alignItems="center"
-              sx={{ color: 'text.disabled', minWidth: 0 }}
+              sx={{color: 'text.disabled', minWidth: 0}}
             >
               {item.icon}
               <Typography variant="caption" noWrap>
@@ -115,15 +115,15 @@ export default function JobItem({ job, onView, onEdit, onDelete }) {
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
-        sx={{ width: 140 }}
+        sx={{width: 140}}
       >
         <MenuItem
           onClick={() => {
             popover.onClose();
-            onView();
+            onView(_id);
           }}
         >
-          <Iconify icon="solar:eye-bold" />
+          <Iconify icon="solar:eye-bold"/>
           View
         </MenuItem>
 
@@ -142,9 +142,9 @@ export default function JobItem({ job, onView, onEdit, onDelete }) {
             popover.onClose();
             onDelete();
           }}
-          sx={{ color: 'error.main' }}
+          sx={{color: 'error.main'}}
         >
-          <Iconify icon="solar:trash-bin-trash-bold" />
+          <Iconify icon="solar:trash-bin-trash-bold"/>
           Delete
         </MenuItem>
       </CustomPopover>

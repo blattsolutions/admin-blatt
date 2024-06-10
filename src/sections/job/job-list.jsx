@@ -1,19 +1,18 @@
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
+import {useCallback} from 'react';
 
 import Box from '@mui/material/Box';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
+import Pagination, {paginationClasses} from '@mui/material/Pagination';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import {paths} from 'src/routes/paths';
+import {useRouter} from 'src/routes/hooks';
 
 import JobItem from './job-item';
 
 // ----------------------------------------------------------------------
 
-export default function JobList({ jobs }) {
+export default function JobList({jobs, totalPage, onPageChange}) {
   const router = useRouter();
-
   const handleView = useCallback(
     (id) => {
       router.push(paths.dashboard.form.details(id));
@@ -45,18 +44,19 @@ export default function JobList({ jobs }) {
       >
         {jobs.map((job) => (
           <JobItem
-            key={job.id}
+            key={job._id}
             job={job}
-            onView={() => handleView(job.id)}
+            onView={() => handleView(job._id)}
             onEdit={() => handleEdit(job.id)}
             onDelete={() => handleDelete(job.id)}
           />
         ))}
       </Box>
 
-      {jobs.length > 8 && (
+      {totalPage > 2 && (
         <Pagination
-          count={8}
+          count={totalPage}
+          onChange={(_, page) => onPageChange?.(page)}
           sx={{
             mt: 8,
             [`& .${paginationClasses.ul}`]: {

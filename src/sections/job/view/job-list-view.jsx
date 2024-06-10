@@ -1,12 +1,12 @@
 import orderBy from 'lodash/orderBy';
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import {useState, useCallback, useEffect} from 'react';
 
 import Stack from '@mui/material/Stack';
 // import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
-import { paths } from 'src/routes/paths';
+import {paths} from 'src/routes/paths';
 // import { RouterLink } from 'src/routes/components';
 
 // import { useBoolean } from 'src/hooks/use-boolean';
@@ -23,7 +23,7 @@ import {
 
 // import Iconify from 'src/components/iconify';
 import EmptyContent from 'src/components/empty-content';
-import { useSettingsContext } from 'src/components/settings';
+import {useSettingsContext} from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import JobList from '../job-list';
@@ -35,6 +35,8 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import {GridSearchIcon} from "@mui/x-data-grid";
 import useDebouncedValue from "../../../hooks/useDebouncedValue.jsx";
+import axiosInstance, {endpoints} from "../../../utils/axios.js";
+import {useDebounce} from "../../../hooks/use-debounce.js";
 
 // ----------------------------------------------------------------------
 
@@ -50,15 +52,8 @@ const defaultFilters = {
 
 export default function JobListView() {
   const settings = useSettingsContext();
-  // const openFilters = useBoolean();
-  const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('latest');
-  const debouncedQuery = useDebouncedValue(searchQuery, 500);
-  console.log(_jobs)
-  const [search, setSearch] = useState({
-    query: '',
-    results: [],
-  });
+  const [jobs, setJobs] = useState([]);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -68,9 +63,14 @@ export default function JobListView() {
     sortBy,
   });
 
+  const [totalPage, setTotalPage] = useState(0);
+
+
   const canReset = !isEqual(defaultFilters, filters);
 
   const notFound = !dataFiltered.length && canReset;
+
+  const [page, setPage] = useState(1);
 
   const handleFilters = useCallback((name, value) => {
     setFilters((prevState) => ({
@@ -87,37 +87,20 @@ export default function JobListView() {
     setSortBy(newValue);
   }, []);
 
-  const handleSearch = useCallback(
-    (inputValue) => {
-      setSearch((prevState) => ({
-        ...prevState,
-        query: inputValue,
-      }));
+  const [searchQuery, setSearchQuery] = useState('');
 
-      if (inputValue) {
-        const results = _jobs.filter(
-          (job) => job.title.toLowerCase().indexOf(search.query.toLowerCase()) !== -1
-        );
-
-        setSearch((prevState) => ({
-          ...prevState,
-          results,
-        }));
-      }
-    },
-    [search.query]
-  );
+  const debouncedQuery = useDebounce(searchQuery);
 
   const renderFilters = (
     <Stack
       spacing={3}
       justifyContent="space-between"
-      alignItems={{ xs: 'flex-end', sm: 'center' }}
-      direction={{ xs: 'column', sm: 'row' }}
+      alignItems={{xs: 'flex-end', sm: 'center'}}
+      direction={{xs: 'column', sm: 'row'}}
     >
       <TextField
         value={searchQuery}
-        onChange={(e) => handleSearch(e.target.value)}
+        onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Search..."
         variant="outlined"
         sx={{mb: {xs: 3, md: 5}, width: '400px'}}
@@ -148,7 +131,7 @@ export default function JobListView() {
           employmentTypeOptions={JOB_EMPLOYMENT_TYPE_OPTIONS.map((option) => option.label)}
         /> */}
 
-        <JobSort sort={sortBy} onSort={handleSortBy} sortOptions={JOB_SORT_OPTIONS} />
+        <JobSort sort={sortBy} onSort={handleSortBy} sortOptions={JOB_SORT_OPTIONS}/>
       </Stack>
     </Stack>
   );
@@ -164,18 +147,28 @@ export default function JobListView() {
       results={dataFiltered.length}
     />
   );
+  useEffect(() => {
+    axiosInstance.get(`${endpoints.form.list}` +
+      `?sortBy=${sortBy}&search=${debouncedQuery}&page=${page}`)
+      .then(({data: {data, totalPage}}) => {
+        setJobs(data);
+        setTotalPage(totalPage)
+      })
+    return () => {
+    }
+  }, [debouncedQuery, page, sortBy]);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
         heading="List"
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
+          {name: 'Dashboard', href: paths.dashboard.root},
           {
             name: 'Form Customer',
             href: paths.dashboard.form.root,
           },
-          { name: 'List' },
+          {name: 'List'},
         ]}
         // action={
         //   <Button
@@ -188,14 +181,14 @@ export default function JobListView() {
         //   </Button>
         // }
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: {xs: 3, md: 5},
         }}
       />
 
       <Stack
         spacing={2.5}
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: {xs: 3, md: 5},
         }}
       >
         {renderFilters}
@@ -203,17 +196,19 @@ export default function JobListView() {
         {canReset && renderResults}
       </Stack>
 
-      {notFound && <EmptyContent filled title="No Data" sx={{ py: 10 }} />}
+      {notFound && <EmptyContent filled title="No Data" sx={{py: 10}}/>}
 
-      <JobList jobs={dataFiltered} />
+      <JobList jobs={jobs} totalPage={totalPage} onPageChange={(page)=>{
+        setPage(page)
+      }}/>
     </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
-const applyFilter = ({ inputData, filters, sortBy }) => {
-  const { employmentTypes, experience, roles, locations, benefits } = filters;
+const applyFilter = ({inputData, filters, sortBy}) => {
+  const {employmentTypes, experience, roles, locations, benefits} = filters;
 
   // SORT BY
   if (sortBy === 'latest') {
