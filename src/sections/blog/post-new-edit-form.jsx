@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import {useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
-import {useMemo, useEffect, useCallback, useState} from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMemo, useEffect, useCallback, useState } from 'react';
 
 import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
@@ -15,15 +15,15 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-import {paths} from 'src/routes/paths';
-import {useRouter} from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
-import {useBoolean} from 'src/hooks/use-boolean';
-import {useResponsive} from 'src/hooks/use-responsive';
+import { useBoolean } from 'src/hooks/use-boolean';
+import { useResponsive } from 'src/hooks/use-responsive';
 
-import {_tags} from 'src/_mock';
+import { _tags } from 'src/_mock';
 
-import {useSnackbar} from 'src/components/snackbar';
+import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFEditor,
   RHFUpload,
@@ -32,20 +32,20 @@ import FormProvider, {
 } from 'src/components/hook-form';
 
 import PostDetailsPreview from './post-details-preview';
-import axiosInstance, {endpoints} from '../../utils/axios';
-import axios from "../../utils/axios";
-import Image from "../../components/image/index.js";
+import axiosInstance, { endpoints } from '../../utils/axios';
+import axios from '../../utils/axios';
+import Image from '../../components/image/index.js';
 
 // ----------------------------------------------------------------------
 
-export default function PostNewEditForm({currentPost}) {
+export default function PostNewEditForm({ currentPost }) {
   const router = useRouter();
   const query = new URLSearchParams(window.location.search);
   const id = query.get('id');
 
   const mdUp = useResponsive('up', 'md');
 
-  const {enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const preview = useBoolean();
 
@@ -85,9 +85,8 @@ export default function PostNewEditForm({currentPost}) {
     watch,
     setValue,
     handleSubmit,
-    formState: {isSubmitting, isValid},
+    formState: { isSubmitting, isValid },
   } = methods;
-
 
   const values = watch();
 
@@ -119,16 +118,18 @@ export default function PostNewEditForm({currentPost}) {
           router.push(paths.dashboard.post.root);
         });
     } else {
-      axiosInstance.post(endpoints.post.new, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }).then((res) => {
-        reset();
-        preview.onFalse();
-        enqueueSnackbar(currentPost ? 'Update success!' : 'Create success!');
-        router.push(paths.dashboard.post.root);
-      });
+      axiosInstance
+        .post(endpoints.post.new, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((res) => {
+          reset();
+          preview.onFalse();
+          enqueueSnackbar(currentPost ? 'Update success!' : 'Create success!');
+          router.push(paths.dashboard.post.root);
+        });
     }
   });
   const handleDrop = useCallback(
@@ -138,7 +139,7 @@ export default function PostNewEditForm({currentPost}) {
       });
 
       if (acceptedFiles[0]) {
-        setValue('coverUrl', newFile, {shouldValidate: true});
+        setValue('coverUrl', newFile, { shouldValidate: true });
       }
     },
     [setValue]
@@ -148,14 +149,21 @@ export default function PostNewEditForm({currentPost}) {
     setValue('coverUrl', null);
   }, [setValue]);
 
+  useEffect(() => {
+    axiosInstance.get(endpoints.category.list).then(({ data }) => {
+      setTags(data.categories);
+    });
+    return () => {};
+  }, []);
+
   const renderDetails = (
     <>
       {mdUp && (
         <Grid md={4}>
-          <Typography variant="h6" sx={{mb: 0.5}}>
+          <Typography variant="h6" sx={{ mb: 0.5 }}>
             Details
           </Typography>
-          <Typography variant="body2" sx={{color: 'text.secondary'}}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Title, short description, image...
           </Typography>
         </Grid>
@@ -163,12 +171,12 @@ export default function PostNewEditForm({currentPost}) {
 
       <Grid xs={12} md={8}>
         <Card>
-          {!mdUp && <CardHeader title="Details"/>}
+          {!mdUp && <CardHeader title="Details" />}
 
-          <Stack spacing={3} sx={{p: 3}}>
-            <RHFTextField name="title" label="Post Title"/>
+          <Stack spacing={3} sx={{ p: 3 }}>
+            <RHFTextField name="title" label="Post Title" />
 
-            <RHFTextField name="description" label="Description" multiline rows={3}/>
+            <RHFTextField name="description" label="Description" multiline rows={3} />
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Thumbnail</Typography>
               <RHFUpload
@@ -180,7 +188,7 @@ export default function PostNewEditForm({currentPost}) {
             </Stack>
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Content</Typography>
-              <RHFEditor simple name="content"/>
+              <RHFEditor simple name="content" />
             </Stack>
           </Stack>
         </Card>
@@ -192,10 +200,10 @@ export default function PostNewEditForm({currentPost}) {
     <>
       {mdUp && (
         <Grid md={4}>
-          <Typography variant="h6" sx={{mb: 0.5}}>
+          <Typography variant="h6" sx={{ mb: 0.5 }}>
             Properties
           </Typography>
-          <Typography variant="body2" sx={{color: 'text.secondary'}}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Additional functions and attributes...
           </Typography>
         </Grid>
@@ -203,26 +211,26 @@ export default function PostNewEditForm({currentPost}) {
 
       <Grid xs={12} md={8}>
         <Card>
-          {!mdUp && <CardHeader title="Properties"/>}
+          {!mdUp && <CardHeader title="Properties" />}
 
-          <Stack spacing={3} sx={{p: 3}}>
+          <Stack spacing={3} sx={{ p: 3 }}>
             <RHFAutocomplete
               name="tags"
               label="Tags"
               placeholder="+ Tags"
               multiple
               freeSolo
-              options={_tags.map((option) => option)}
+              options={tags}
               getOptionLabel={(option) => option}
               renderOption={(props, option) => (
                 <li {...props} key={option}>
-                  {option}
+                  {option.title}
                 </li>
               )}
               renderTags={(selected, getTagProps) =>
                 selected.map((option, index) => (
                   <Chip
-                    {...getTagProps({index})}
+                    {...getTagProps({ index })}
                     key={option}
                     label={option?.title ?? option}
                     size="small"
@@ -280,12 +288,12 @@ export default function PostNewEditForm({currentPost}) {
 
   const renderActions = (
     <>
-      {mdUp && <Grid md={4}/>}
-      <Grid xs={12} md={8} sx={{display: 'flex', alignItems: 'center'}}>
+      {mdUp && <Grid md={4} />}
+      <Grid xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
         <FormControlLabel
-          control={<Switch defaultChecked/>}
+          control={<Switch defaultChecked />}
           label="Publish"
-          sx={{flexGrow: 1, pl: 3}}
+          sx={{ flexGrow: 1, pl: 3 }}
         />
 
         <Button color="inherit" variant="outlined" size="large" onClick={preview.onTrue}>
@@ -297,7 +305,7 @@ export default function PostNewEditForm({currentPost}) {
           variant="contained"
           size="large"
           loading={isSubmitting}
-          sx={{ml: 2}}
+          sx={{ ml: 2 }}
         >
           {!currentPost ? 'Create Post' : 'Save Changes'}
         </LoadingButton>

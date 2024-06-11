@@ -27,7 +27,7 @@ axiosInstance.interceptors.response.use(
       if (refreshToken) {
         try {
           const response = await axios.post(`${HOST_API}${endpoints.auth.refreshToken}`, {
-            refresh_token:refreshToken,
+            refresh_token: refreshToken,
           });
           const newToken = response.data.access_token;
           sessionStorage.setItem('token', newToken);
@@ -96,5 +96,8 @@ export const endpoints = {
   },
   form: {
     list: '/api/admin/form-list',
+    }
+  category: {
+    list: '/api/category/list',
   },
 };
