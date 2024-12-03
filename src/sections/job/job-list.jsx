@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import {useCallback} from 'react';
+import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import Pagination, {paginationClasses} from '@mui/material/Pagination';
@@ -71,4 +71,6 @@ export default function JobList({jobs, totalPage, onPageChange}) {
 
 JobList.propTypes = {
   jobs: PropTypes.array,
+  totalPage: PropTypes.number,
+  onPageChange: PropTypes.func
 };

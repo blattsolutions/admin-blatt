@@ -1,4 +1,4 @@
-import {paths} from 'src/routes/paths';
+// import {paths} from 'src/routes/paths';
 
 import axios from 'src/utils/axios';
 
@@ -63,7 +63,7 @@ export const setSession = (accessToken) => {
 
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
-    const {exp} = jwtDecode(accessToken);
+    // const {exp} = jwtDecode(accessToken);
     // tokenExpired(exp);
   } else {
     sessionStorage.removeItem('token');

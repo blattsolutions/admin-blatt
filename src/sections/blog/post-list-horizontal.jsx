@@ -48,8 +48,8 @@ export default function PostListHorizontal({posts, loading, page, totalPage, onC
               justifyContent: 'center',
             },
           }}
-          onChange={(e, page) => {
-            onChangePage?.(page)
+          onChange={(e, selectedPage) => {
+            onChangePage?.(selectedPage)
           }}
         />
       )}
@@ -60,4 +60,7 @@ export default function PostListHorizontal({posts, loading, page, totalPage, onC
 PostListHorizontal.propTypes = {
   loading: PropTypes.bool,
   posts: PropTypes.array,
+  page: PropTypes.number,
+  totalPage: PropTypes.number,
+  onChangePage: PropTypes.func,
 };

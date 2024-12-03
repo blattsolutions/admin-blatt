@@ -29,7 +29,7 @@ import PostDetailsHero from '../post-details-hero';
 // import PostCommentForm from '../post-comment-form';
 import {PostDetailsSkeleton} from '../post-skeleton';
 import PostDetailsToolbar from '../post-details-toolbar';
-import axiosInstance, {endpoints} from "../../../utils/axios.js";
+import axiosInstance, {endpoints} from "../../../utils/axios";
 
 // ----------------------------------------------------------------------
 

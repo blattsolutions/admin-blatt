@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-import { HOST_API } from 'src/config-global';
+// import { HOST_API } from 'src/config-global';
 
 const axiosInstance = axios.create({
-  baseURL: HOST_API,
+  baseURL: 'http://localhost:3001/',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken');
       if (refreshToken) {
         try {
-          const response = await axios.post(`${HOST_API}${endpoints.auth.refreshToken}`, {
+          const response = await axios.post(`http://localhost:3001/${endpoints.auth.refreshToken}`, {
             refresh_token: refreshToken,
           });
           const newToken = response.data.access_token;
@@ -96,8 +96,8 @@ export const endpoints = {
   },
   form: {
     list: '/api/admin/form-list',
-    }
+    },
   category: {
     list: '/api/category/list',
-  },
+  }
 };

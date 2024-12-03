@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useEffect, useCallback, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
@@ -21,7 +21,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import { _tags } from 'src/_mock';
+// import { _tags } from 'src/_mock';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
@@ -33,8 +33,6 @@ import FormProvider, {
 
 import PostDetailsPreview from './post-details-preview';
 import axiosInstance, { endpoints } from '../../utils/axios';
-import axios from '../../utils/axios';
-import Image from '../../components/image/index.js';
 
 // ----------------------------------------------------------------------
 
